@@ -3,9 +3,10 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
+var cron = require('node-cron');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+const { product } = require('./repository/products')
 
 var app = express();
 
@@ -38,5 +39,14 @@ app.use(function(err, req, res, next) {
     res.render('error');
 });
 const port = 9000
-app.listen(port, () => console.log(`¡Aplicación escuchando en el puerto ${port}!`))
+app.listen(port, () => {
+    console.log(`¡Aplicación escuchando en el puerto ${port}!`)
+    console.log("rasping");
+    cron.schedule('15 */10 * * *', () => {
+        console.log('Runing a job at 01:00 at America/Sao_Paulo timezone');
+    }, {
+        scheduled: true,
+        timezone: "America/Bogota"
+    });
+})
 module.exports = app;
